@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,8 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
     'notas',
-    'users'
+    'users',
+    'drf_yasg',#app para documentación automatica de api (swagger)
 ]
 
 MIDDLEWARE = [
@@ -53,11 +56,19 @@ MIDDLEWARE = [
 ]
 
 REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': (
-        'rest_framework.permissions.AllowAny',  # Luego cambia esto cuando agregues JWT
-    )
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
 }
-
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=7),  # Token de acceso dura 7 dias (editable)
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),  # Token de refresh dura 7 días (editable)
+    'ROTATE_REFRESH_TOKENS': True,  # Cada vez que se refresca el token, se genera uno nuevo
+    'BLACKLIST_AFTER_ROTATION': True,  # Los tokens viejos se invalidan si se refrescan
+    'ALGORITHM': 'HS256',
+    'SIGNING_KEY': 'clave_secreta',  # Usar varialbes de entorno
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
 
 ROOT_URLCONF = 'mi_api.urls'
 
@@ -83,7 +94,7 @@ WSGI_APPLICATION = 'mi_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
+DATABASES = { # Editar con variables de entorno y datos de la base de datos a usar
     'default': {
         'ENGINE': 'mssql',
         'NAME': 'miapi',
@@ -92,7 +103,7 @@ DATABASES = {
         'HOST': 'localhost',  # O la IP del servidor SQL
         'PORT': '1433',
         'OPTIONS': {
-            'driver': 'ODBC Driver 17 for SQL Server',  # Asegúrate de tener este driver instalado
+            'driver': 'ODBC Driver 17 for SQL Server',  
             'encrypt': 'no',  # Desactiva el cifrado
         },
     }
@@ -116,6 +127,7 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+AUTH_USER_MODEL = 'users.CustomUser'
 
 
 # Internationalization
@@ -123,7 +135,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'America/Santiago'
+TIME_ZONE = 'America/Santiago' # Zona horaria
 
 USE_I18N = True
 
