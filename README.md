@@ -14,9 +14,10 @@ Esta es una API para gestionar notas con autenticación JWT en Django REST Frame
 ### 🔐Autenticación y Usuarios
 | Método | Endpoint      | Descripción             |
 |:-------|:--------------| :----------             |
-|POST    |/registro/     |Registra un nuevo usuario|
+|POST    |/register/     |Registra un nuevo usuario|
 |POST    |/token/        |Obtiene token JWT de acceso y refresco
-|POST    |/token/refresh/|Renueva un token de acceso usando el refresh token                                      |  
+|POST    |/token/refresh/|Renueva un token de acceso usando el refresh token|  
+|GET     |/profile/      |Obtiene nombre y correo de usuario actual|
 
 
 Ejemplo de JSON para registrar un usuario:
